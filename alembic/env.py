@@ -4,7 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from app.database.connection import DATABASE_URL, Base
-from app.models import User  # noqa: F401
+from app.models import Device, Loan, User  # noqa: F401
 
 
 config = context.config

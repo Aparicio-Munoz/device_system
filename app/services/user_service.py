@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from ..auth.security import DISABLED_PASSWORD_HASH
 from ..models.user_model import User
 from ..schemas.user_schema import UserCreate, UserPatch, UserUpdate
 
@@ -47,6 +48,7 @@ def _commit(db: Session, user: User) -> User:
 
 def create_user(db: Session, data: UserCreate) -> User:
     values = _values(data)
+    values["hashed_password"] = DISABLED_PASSWORD_HASH
 
     if _find_by_email(db, values["email"]):
         raise HTTPException(

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
+from ..dependencies.auth_dependency import require_admin, require_admin_or_support
 from ..dependencies.database_dependency import get_db
 from ..schemas.device_schema import (
     DeviceCreate,
@@ -20,6 +21,7 @@ router = APIRouter(prefix="/devices", tags=["Devices"])
     status_code=status.HTTP_201_CREATED,
     summary="Crear dispositivo",
     response_description="Dispositivo creado correctamente",
+    dependencies=[Depends(require_admin_or_support)],
 )
 def create_device(device: DeviceCreate, db: Session = Depends(get_db)):
     return device_service.create_device(db, device)
@@ -55,6 +57,7 @@ def get_device(device_id: int, db: Session = Depends(get_db)):
     "/{device_id}",
     response_model=DeviceResponse,
     summary="Actualizar dispositivo",
+    dependencies=[Depends(require_admin_or_support)],
 )
 def update_device(
     device_id: int,
@@ -68,6 +71,7 @@ def update_device(
     "/{device_id}",
     response_model=DeviceResponse,
     summary="Actualizar parcialmente un dispositivo",
+    dependencies=[Depends(require_admin_or_support)],
 )
 def patch_device(
     device_id: int,
@@ -81,6 +85,7 @@ def patch_device(
     "/{device_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Eliminar dispositivo",
+    dependencies=[Depends(require_admin)],
 )
 def delete_device(device_id: int, db: Session = Depends(get_db)):
     device_service.delete_device(db, device_id)
