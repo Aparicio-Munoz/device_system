@@ -8,6 +8,7 @@ from sqlalchemy import (
     Integer,
     String,
 )
+from sqlalchemy.orm import relationship
 
 from ..database.connection import Base
 
@@ -36,3 +37,5 @@ class User(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
     )
+
+    loans = relationship("Loan", back_populates="user")

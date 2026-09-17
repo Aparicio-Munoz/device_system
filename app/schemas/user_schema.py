@@ -28,6 +28,17 @@ class UserCreate(BaseModel):
     _name_validator = field_validator("name", mode="before")(_clean_name)
     _email_validator = field_validator("email", mode="before")(_clean_email)
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "name": "Ana Pérez",
+                "email": "ana@sena.edu.co",
+                "role": "user",
+                "is_active": True,
+            }
+        }
+    )
+
 
 class UserUpdate(UserCreate):
     pass

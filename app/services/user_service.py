@@ -135,5 +135,20 @@ def patch_user(db: Session, user_id: int, data: UserPatch) -> User:
 
 def delete_user(db: Session, user_id: int) -> None:
     user = get_user(db, user_id)
+
+    if user.loans:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="No se puede eliminar un usuario con historial de préstamos",
+        )
+
     db.delete(user)
-    db.commit()
+
+    try:
+        db.commit()
+    except IntegrityError as error:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="No se puede eliminar el usuario porque tiene préstamos",
+        ) from error
