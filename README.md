@@ -148,7 +148,27 @@ Se validaron de forma funcional el registro exitoso (`201`), el rechazo de contr
 
 ### Evidencias de seguridad
 
-Las capturas de la actividad anterior permanecen en `docs/evidencias/`. Para esta actividad se deben documentar desde Swagger o Postman las pruebas de registro correcto y débil, email duplicado, login correcto e incorrecto, `/auth/me`, acceso sin token y con token inválido, autorización por rol, CORS, cabeceras `X-*`, rate limiting y el esquema OAuth2 visible en `/docs`.
+Las capturas de esta actividad están en `docs/evidencias/` y fueron generadas a partir de respuestas reales de la API:
+
+![Estructura del proyecto](docs/evidencias/estructura_proyecto.png)
+
+![Migración Alembic aplicada](docs/evidencias/alembic_aplicada.png)
+
+![Registro de usuario](docs/evidencias/registro_usuario.png)
+
+![Login y token JWT](docs/evidencias/login_token.png)
+
+![Usuario autenticado](docs/evidencias/auth_me.png)
+
+![Acceso sin token](docs/evidencias/acceso_sin_token.png)
+
+![Rol no permitido](docs/evidencias/rol_no_permitido.png)
+
+![Swagger OpenAPI con OAuth2](docs/evidencias/swagger_oauth2.png)
+
+![Cabeceras del middleware](docs/evidencias/cabeceras_middleware.png)
+
+![Prueba de rate limiting](docs/evidencias/rate_limiting.png)
 
 La migración `20260917_03` agrega `hashed_password` de forma compatible con usuarios existentes, asignando un hash de transición no utilizable y obligando el campo a partir de ese punto. Los nuevos usuarios solo deben registrarse mediante `/auth/register` para establecer una contraseña conocida por su propietario.
 
@@ -185,38 +205,6 @@ Ejemplos de filtros:
 /devices?is_available=true&brand=lenovo
 ```
 
-## Evidencias de aprendizaje
+## Reflexión final
 
-Las capturas se almacenan en `docs/evidencias/` y documentan la ejecución de migraciones, Swagger, creación de recursos, consultas relacionadas, filtros y devolución.
-
-### Alembic y base de datos
-
-![Inicialización de Alembic](docs/evidencias/alembic_init.png)
-
-![Creación de migración](docs/evidencias/alembic_revision.png)
-
-![Aplicación de migración](docs/evidencias/alembic_upgrade.png)
-
-![Historial de migraciones](docs/evidencias/alembic_history.png)
-
-![Estructura de tablas](docs/evidencias/estructura_tablas.png)
-
-### API y Swagger
-
-![Swagger UI](docs/evidencias/swagger_ui.png)
-
-![Creación de usuario](docs/evidencias/usuario_creado.png)
-
-![Creación de dispositivo](docs/evidencias/crear_dispositivo.png)
-
-![Creación de préstamo](docs/evidencias/crear_prestamo.png)
-
-![Consulta con joins](docs/evidencias/consulta_join.png)
-
-![Filtros aplicados](docs/evidencias/filtro_prestamos.png)
-
-![Devolución de dispositivo](docs/evidencias/devolver_dispositivo.png)
-
-## Reflexión
-
-Alembic permite controlar la evolución de la base de datos mediante migraciones versionadas, evitando cambios manuales y facilitando el trabajo colaborativo. Las relaciones entre usuarios, dispositivos y préstamos mantienen la integridad referencial del sistema. Finalmente, las consultas con `join`, `where`, `ilike`, `and_` y `or_` permiten entregar información relacionada y aplicar búsquedas útiles sin duplicar lógica en los endpoints.
+La seguridad en una API REST debe aplicarse en varias capas. Pydantic valida y normaliza los datos antes de procesarlos; bcrypt evita almacenar contraseñas recuperables; JWT y OAuth2 controlan la identidad; las dependencias limitan cada operación según el rol; CORS restringe los clientes autorizados; el middleware permite rastrear peticiones; y el rate limiting reduce abusos y ataques de fuerza bruta. Estas medidas, junto con migraciones versionadas y secretos fuera del repositorio, hacen que `device_systems` sea más segura, observable y preparada para integrarse con un frontend.
