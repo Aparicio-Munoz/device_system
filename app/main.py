@@ -2,13 +2,9 @@ from fastapi import Depends, FastAPI
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from .database.connection import Base, engine
 from .dependencies.database_dependency import get_db
 from .models.user_model import User  # noqa: F401
 from .routes.user_routes import router as user_router
-
-
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="device_systems",
